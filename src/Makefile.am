@@ -1,0 +1,22 @@
+AM_CPPFLAGS=-I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src
+
+#noinst_LIBRARIES=libtaxangler.a
+#libtaxangler_a_SOURCES=TaxDB.h \
+#					   TaxDB.cc \
+#					   TaxDBManager.h\
+#					   TaxDBManager.cc \
+#					   TaxResult.h \
+#					   TaxResult.cc \
+#					   common.h \
+#					   log.h \
+#					   util_result_formatter.cc
+#
+#bin_PROGRAMS=taxangler
+#taxangler_SOURCES=main.cc
+#taxangler_LDADD=libtaxangler.a $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la
+
+bin_PROGRAMS=afbgalive
+afbgalive_SOURCES=main.cc
+afbgalive_LDADD=$(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la
+
+
