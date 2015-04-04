@@ -1,4 +1,5 @@
-AM_CPPFLAGS=-I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src
+AM_CPPFLAGS=-I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src \
+			-I$(top_srcdir)/vendor/htslib-1.2.1
 
 #noinst_LIBRARIES=libtaxangler.a
 #libtaxangler_a_SOURCES=TaxDB.h \
@@ -17,6 +18,7 @@ AM_CPPFLAGS=-I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src
 
 bin_PROGRAMS=afbgalive
 afbgalive_SOURCES=main.cc
-afbgalive_LDADD=$(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la
+afbgalive_LDADD=$(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la \
+				$(top_builddir)/vendor/htslib-1.2.1/libhts.la
 
 

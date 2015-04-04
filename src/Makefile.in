@@ -97,7 +97,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_afbgalive_OBJECTS = main.$(OBJEXT)
 afbgalive_OBJECTS = $(am_afbgalive_OBJECTS)
-afbgalive_DEPENDENCIES = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la
+afbgalive_DEPENDENCIES = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la \
+	$(top_builddir)/vendor/htslib-1.2.1/libhts.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -284,9 +285,13 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CPPFLAGS = -I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src
+AM_CPPFLAGS = -I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src \
+			-I$(top_srcdir)/vendor/htslib-1.2.1
+
 afbgalive_SOURCES = main.cc
-afbgalive_LDADD = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la
+afbgalive_LDADD = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la \
+				$(top_builddir)/vendor/htslib-1.2.1/libhts.la
+
 all: all-am
 
 .SUFFIXES:
