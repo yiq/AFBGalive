@@ -78,7 +78,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = afbgalive$(EXEEXT)
+bin_PROGRAMS = afbgalive$(EXEEXT) vcfload$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/build-aux/depcomp
@@ -103,6 +103,10 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_vcfload_OBJECTS = vcfload.$(OBJEXT)
+vcfload_OBJECTS = $(am_vcfload_OBJECTS)
+vcfload_DEPENDENCIES = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la \
+	$(top_builddir)/vendor/htslib-1.2.1/libhts.la
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -137,8 +141,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(afbgalive_SOURCES)
-DIST_SOURCES = $(afbgalive_SOURCES)
+SOURCES = $(afbgalive_SOURCES) $(vcfload_SOURCES)
+DIST_SOURCES = $(afbgalive_SOURCES) $(vcfload_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -288,9 +292,14 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src \
 			-I$(top_srcdir)/vendor/htslib-1.2.1
 
+AM_LDFLAGS = -all-static
 afbgalive_SOURCES = main.cc
 afbgalive_LDADD = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la \
-				$(top_builddir)/vendor/htslib-1.2.1/libhts.la
+				$(top_builddir)/vendor/htslib-1.2.1/libhts.la -lz
+
+vcfload_SOURCES = vcfload.cc
+vcfload_LDADD = $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la \
+			  $(top_builddir)/vendor/htslib-1.2.1/libhts.la -lz
 
 all: all-am
 
@@ -380,6 +389,10 @@ afbgalive$(EXEEXT): $(afbgalive_OBJECTS) $(afbgalive_DEPENDENCIES) $(EXTRA_afbga
 	@rm -f afbgalive$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(afbgalive_OBJECTS) $(afbgalive_LDADD) $(LIBS)
 
+vcfload$(EXEEXT): $(vcfload_OBJECTS) $(vcfload_DEPENDENCIES) $(EXTRA_vcfload_DEPENDENCIES) 
+	@rm -f vcfload$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(vcfload_OBJECTS) $(vcfload_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -387,6 +400,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vcfload.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
