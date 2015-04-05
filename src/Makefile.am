@@ -1,6 +1,10 @@
 AM_CPPFLAGS=-I$(top_srcdir)/vendor/YiCppLib/RedisKVStore/src \
 			-I$(top_srcdir)/vendor/htslib-1.2.1
 
+AM_CFLAGS=${PTHREAD_CFLAGS}
+AM_CXXFLAGS=${AM_CFLAGS}
+AM_LIBS=${PTHREAD_LIBS}
+
 AM_LDFLAGS=-all-static
 
 #noinst_LIBRARIES=libtaxangler.a
