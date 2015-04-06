@@ -14,7 +14,8 @@ int main(int argc, const char *argv[]) {
 
 	std::string ns(argv[1]);
 
-	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("/opt/redis/var/run/redis.sock"));
+	//YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("/opt/redis/var/run/redis.sock"));
+	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("127.0.0.1", 6379));
 
 	htsFile *fp = hts_open("-", "rg");
 	bcf_hdr_t *hdr = vcf_hdr_read(fp);

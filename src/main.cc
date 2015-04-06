@@ -23,8 +23,8 @@ int main(int argc, char **argv){
 	}
 	
 
-	//YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("/opt/redis/var/run/redis.sock"));
-	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("redis", 6379));
+	//YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("/var/run/redis.sock"));
+	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("127.0.0.1", 6379));
 
 	htsFile *in_fp = hts_open("-", "rz");
 	htsFile *out_fp;
