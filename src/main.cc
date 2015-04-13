@@ -1,16 +1,21 @@
+#include <config.h>
 #include <iostream>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <unistd.h>
 #include "htslib/hts.h"
 #include "htslib/vcf.h"
 #include "RedisKVStore.h"
+#include "h2ip.h"
+
+#define REDIS_PORT 6370
 
 int compress_output = 0;
 
-int main(int argc, char **argv){
 
+int main(int argc, char **argv){
 	int c;
 	while((c = getopt(argc, argv, "z")) != -1) {
 		switch (c) {
@@ -21,10 +26,14 @@ int main(int argc, char **argv){
 				break;
 		}
 	}
-	
 
-	//YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("/var/run/redis.sock"));
-	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore("127.0.0.1", 6379));
+	std::unique_ptr<char> redisIp(h2ip(REDIS_HOST));
+	if(strlen(redisIp.get()) == 0){
+		std::cerr<<"Unable to resolve ip address for host "<<redisIp.get()<<std::endl;
+		exit(1);
+	}
+
+	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore(redisIp.get(), REDIS_PORT));
 
 	htsFile *in_fp = hts_open("-", "rz");
 	htsFile *out_fp;

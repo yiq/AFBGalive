@@ -57,6 +57,15 @@ AC_ARG_ENABLE([debug],
 		       *)   AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
 		       esac],
 			   [debug=false])
+## END: DEBUG / RELEASE ##
+
+## Options
+AC_ARG_WITH([redis-hostname],
+			[AS_HELP_STRING([--with-redis-hostname=<hostname>],
+							[Specify a hostname for the redis server. Default: redis])],
+							[redis_host=${withval}],
+							[redis_host=redis])
+AC_DEFINE_UNQUOTED([REDIS_HOST], ["${redis_host}"], [The hostname of the redis server])
 
 AS_IF([test "x$debug" = xtrue], [AC_DEFINE([LOGLVL], [LOGLV_DEBUG], [Define log level to be debug for debug mode])])
 
@@ -88,4 +97,5 @@ PTHREAD_CC='${PTHREAD_CC}'
 
 DATADIR=${DATADIR}
 debug=${debug}
+redis_host=${redis_host}
 "
