@@ -10,8 +10,6 @@
 #include "RedisKVStore.h"
 #include "h2ip.h"
 
-#define REDIS_PORT 6370
-
 int compress_output = 0;
 
 

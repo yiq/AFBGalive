@@ -67,6 +67,14 @@ AC_ARG_WITH([redis-hostname],
 							[redis_host=redis])
 AC_DEFINE_UNQUOTED([REDIS_HOST], ["${redis_host}"], [The hostname of the redis server])
 
+AC_ARG_WITH([redis-port],
+			[AS_HELP_STRING([--with-redis-port=<port>],
+							[Specify a port to connect to the redis server. Default: 6379])],
+							[redis_port=${withval}],
+							[redis_port=6379])
+AC_DEFINE_UNQUOTED([REDIS_PORT], [${redis_port}], [The port of the redis server])
+
+
 AS_IF([test "x$debug" = xtrue], [AC_DEFINE([LOGLVL], [LOGLV_DEBUG], [Define log level to be debug for debug mode])])
 
 AC_CONFIG_SUBDIRS([vendor/YiCppLib/RedisKVStore vendor/htslib-1.2.1])

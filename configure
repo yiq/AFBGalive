@@ -778,6 +778,7 @@ enable_libtool_lock
 with_jansson
 enable_debug
 with_redis_hostname
+with_redis_port
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1439,6 +1440,9 @@ Optional Packages:
   --with-redis-hostname=<hostname>
                           Specify a hostname for the redis server. Default:
                           redis
+  --with-redis-port=<port>
+                          Specify a port to connect to the redis server.
+                          Default: 6379
 
 Some influential environment variables:
   CC          C compiler command
@@ -16727,6 +16731,21 @@ fi
 cat >>confdefs.h <<_ACEOF
 #define REDIS_HOST "${redis_host}"
 _ACEOF
+
+
+
+# Check whether --with-redis-port was given.
+if test "${with_redis_port+set}" = set; then :
+  withval=$with_redis_port; redis_port=${withval}
+else
+  redis_port=6379
+fi
+
+
+cat >>confdefs.h <<_ACEOF
+#define REDIS_PORT ${redis_port}
+_ACEOF
+
 
 
 if test "x$debug" = xtrue; then :

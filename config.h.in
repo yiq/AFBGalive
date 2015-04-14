@@ -76,6 +76,9 @@
 /* The hostname of the redis server */
 #undef REDIS_HOST
 
+/* The port of the redis server */
+#undef REDIS_PORT
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
