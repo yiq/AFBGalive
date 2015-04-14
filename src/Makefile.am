@@ -5,22 +5,7 @@ AM_CFLAGS=${PTHREAD_CFLAGS} -std=gnu99
 AM_CXXFLAGS=${PTHREAD_CFLAGS}
 AM_LIBS=${PTHREAD_LIBS}
 
-AM_LDFLAGS=-all-static
-
-#noinst_LIBRARIES=libtaxangler.a
-#libtaxangler_a_SOURCES=TaxDB.h \
-#					   TaxDB.cc \
-#					   TaxDBManager.h\
-#					   TaxDBManager.cc \
-#					   TaxResult.h \
-#					   TaxResult.cc \
-#					   common.h \
-#					   log.h \
-#					   util_result_formatter.cc
-#
-#bin_PROGRAMS=taxangler
-#taxangler_SOURCES=main.cc
-#taxangler_LDADD=libtaxangler.a $(top_builddir)/vendor/YiCppLib/RedisKVStore/src/libyi_rediskvstore.la
+#AM_LDFLAGS=-all-static
 
 bin_PROGRAMS=afbgalive vcfload
 afbgalive_SOURCES=main.cc h2ip.c
