@@ -1,3 +1,0 @@
-[submodule "vendor/YiCppLib/RedisKVStore"]
-	path = vendor/YiCppLib/RedisKVStore
-	url = https://github.com/YiCppLib/RedisKVStore
