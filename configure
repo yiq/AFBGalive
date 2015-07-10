@@ -775,7 +775,6 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
-with_jansson
 enable_debug
 with_redis_hostname
 with_redis_port
@@ -794,7 +793,7 @@ CCC
 LT_SYS_LIBRARY_PATH
 CPP
 CXXCPP'
-ac_subdirs_all='vendor/YiCppLib/RedisKVStore vendor/htslib-1.2.1'
+ac_subdirs_all='vendor/sqlite3 vendor/htslib-1.2.1'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -1436,7 +1435,6 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
-  --with-jansson=DIR      specify the path to search for jansson
   --with-redis-hostname=<hostname>
                           Specify a hostname for the redis server. Default:
                           redis
@@ -1920,97 +1918,6 @@ fi
   as_fn_set_status $ac_retval
 
 } # ac_fn_cxx_try_link
-
-# ac_fn_cxx_check_header_mongrel LINENO HEADER VAR INCLUDES
-# ---------------------------------------------------------
-# Tests whether HEADER exists, giving a warning if it cannot be compiled using
-# the include files in INCLUDES and setting the cache variable VAR
-# accordingly.
-ac_fn_cxx_check_header_mongrel ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  if eval \${$3+:} false; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-$as_echo_n "checking for $2... " >&6; }
-if eval \${$3+:} false; then :
-  $as_echo_n "(cached) " >&6
-fi
-eval ac_res=\$$3
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-else
-  # Is the header compilable?
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking $2 usability" >&5
-$as_echo_n "checking $2 usability... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-#include <$2>
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  ac_header_compiler=yes
-else
-  ac_header_compiler=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_header_compiler" >&5
-$as_echo "$ac_header_compiler" >&6; }
-
-# Is the header present?
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking $2 presence" >&5
-$as_echo_n "checking $2 presence... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <$2>
-_ACEOF
-if ac_fn_cxx_try_cpp "$LINENO"; then :
-  ac_header_preproc=yes
-else
-  ac_header_preproc=no
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_header_preproc" >&5
-$as_echo "$ac_header_preproc" >&6; }
-
-# So?  What about this header?
-case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in #((
-  yes:no: )
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: accepted by the compiler, rejected by the preprocessor!" >&5
-$as_echo "$as_me: WARNING: $2: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: proceeding with the compiler's result" >&5
-$as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
-    ;;
-  no:yes:* )
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: present but cannot be compiled" >&5
-$as_echo "$as_me: WARNING: $2: present but cannot be compiled" >&2;}
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2:     check for missing prerequisite headers?" >&5
-$as_echo "$as_me: WARNING: $2:     check for missing prerequisite headers?" >&2;}
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: see the Autoconf documentation" >&5
-$as_echo "$as_me: WARNING: $2: see the Autoconf documentation" >&2;}
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2:     section \"Present But Cannot Be Compiled\"" >&5
-$as_echo "$as_me: WARNING: $2:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: proceeding with the compiler's result" >&5
-$as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
-( $as_echo "## ---------------------------------------- ##
-## Report this to yi.qiao@genetics.utah.edu ##
-## ---------------------------------------- ##"
-     ) | sed "s/^/$as_me: WARNING:     /" >&2
-    ;;
-esac
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-$as_echo_n "checking for $2... " >&6; }
-if eval \${$3+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  eval "$3=\$ac_header_compiler"
-fi
-eval ac_res=\$$3
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-fi
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-
-} # ac_fn_cxx_check_header_mongrel
 cat >config.log <<_ACEOF
 This file contains any messages produced by compilers while
 running configure, to aid debugging if configure makes a mistake.
@@ -16606,104 +16513,6 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 ac_config_headers="$ac_config_headers config.h"
 
 
-## START: CHECKING FOR JANSSON ##
-
-# Check whether --with-jansson was given.
-if test "${with_jansson+set}" = set; then :
-  withval=$with_jansson; jansson_path=${withval}
-fi
-
-
-if test "x${jansson_path}" != x; then
-	if test -e ${jansson_path}/lib; then LDFLAGS+="-L${jansson_path}/lib"; fi
-	if test -e ${jansson_path}/include; then CPPFLAGS+="-I${jansson_path}/include"; fi
-fi
-
-have_jansson=no
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing json_object" >&5
-$as_echo_n "checking for library containing json_object... " >&6; }
-if ${ac_cv_search_json_object+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char json_object ();
-int
-main ()
-{
-return json_object ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' jansson; do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_search_json_object=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext
-  if ${ac_cv_search_json_object+:} false; then :
-  break
-fi
-done
-if ${ac_cv_search_json_object+:} false; then :
-
-else
-  ac_cv_search_json_object=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_json_object" >&5
-$as_echo "$ac_cv_search_json_object" >&6; }
-ac_res=$ac_cv_search_json_object
-if test "$ac_res" != no; then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  have_jansson=yes
-else
-  have_jansson=no
-fi
-
-
-if test "x${have_jansson}" = xyes; then
-
-for ac_header in jansson.h
-do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "jansson.h" "ac_cv_header_jansson_h" "$ac_includes_default"
-if test "x$ac_cv_header_jansson_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_JANSSON_H 1
-_ACEOF
-
-else
-  have_jansson=no
-fi
-
-done
-
-fi
-
-if test "x${have_jansson}" = xno; then
-	as_fn_error $? "Unable to locate jansson" "$LINENO" 5
-fi
-
-## END: CHECKINF FOR JANSSON ##
-
 ## START: DEBUG / RELEASE ##
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
@@ -16756,7 +16565,7 @@ fi
 
 
 
-subdirs="$subdirs vendor/YiCppLib/RedisKVStore vendor/htslib-1.2.1"
+subdirs="$subdirs vendor/sqlite3 vendor/htslib-1.2.1"
 
 
 ac_config_files="$ac_config_files Makefile src/Makefile"

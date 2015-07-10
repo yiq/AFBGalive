@@ -339,7 +339,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = vendor/YiCppLib/RedisKVStore vendor/htslib-1.2.1 src .
+SUBDIRS = vendor/sqlite3 vendor/htslib-1.2.1 src .
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

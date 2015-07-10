@@ -7,8 +7,7 @@
 #include <unistd.h>
 #include "htslib/hts.h"
 #include "htslib/vcf.h"
-#include "RedisKVStore.h"
-#include "h2ip.h"
+#include "sqlite3.h"
 
 int compress_output = 0;
 
@@ -25,13 +24,31 @@ int main(int argc, char **argv){
 		}
 	}
 
-	std::unique_ptr<char> redisIp(h2ip(REDIS_HOST));
-	if(strlen(redisIp.get()) == 0){
-		std::cerr<<"Unable to resolve ip address for host "<<redisIp.get()<<std::endl;
-		exit(1);
+	sqlite3 *db;
+	int rc = sqlite3_open("afdata/af.db", &db);
+	if(rc != SQLITE_OK) {
+		std::cerr<<"Unable to open database file af.db"<<std::endl;
+		return 1;
 	}
 
-	YiCppLib::RedisKVStore::pointer rStore(new YiCppLib::RedisKVStore(redisIp.get(), REDIS_PORT));
+
+	const char *errmsg;
+
+	sqlite3_stmt *g1k_af_stmt;
+	std::string g1k_af_sql = "SELECT val FROM g1k WHERE chrom=? AND pos=? AND ref='?' AND alt='?';";
+	rc = sqlite3_prepare_v2(db, g1k_af_sql.c_str(), strlen(g1k_af_sql.c_str()), &g1k_af_stmt, &errmsg);
+	if(rc != SQLITE_OK) {
+		std::cerr<<"("<<rc<<") Unable to compile select for g1k statement: "<<errmsg<<std::endl;
+		return 1;
+	}
+
+	sqlite3_stmt *exac_af_stmt;
+	std::string exac_af_sql = "SELECT val FROM exac WHERE chrom=? AND pos=? AND ref=? AND alt=?;";
+	rc = sqlite3_prepare_v2(db, exac_af_sql.c_str(), strlen(exac_af_sql.c_str()), &exac_af_stmt, &errmsg);
+	if(rc != SQLITE_OK) {
+		std::cerr<<"("<<rc<<") Unable to compile select for exac statement: "<<errmsg<<std::endl;
+		return 1;
+	}
 
 	htsFile *in_fp = hts_open("-", "rz");
 	htsFile *out_fp;
@@ -72,11 +89,41 @@ int main(int argc, char **argv){
 							  rec->d.allele[0] + ":" + \
 							  rec->d.allele[i];
 			
-			std::string AFStr1KG = rStore->stringValueForKeyInNamespace(key, "1KG");
-			std::string AFStrExac = rStore->stringValueForKeyInNamespace(key, "EXAC");
+			//std::string AFStr1KG = rStore->stringValueForKeyInNamespace(key, "1KG");
+			//std::string AFStrExac = rStore->stringValueForKeyInNamespace(key, "EXAC");
+			
+			std::string AFStr1KG = "";
+			std::string AFStrExac = "";
+
+			sqlite3_bind_int(g1k_af_stmt, 1, chrom);
+			sqlite3_bind_int(g1k_af_stmt, 2, pos);
+			sqlite3_bind_text(g1k_af_stmt, 3, rec->d.allele[0], strlen(rec->d.allele[0]), NULL);
+			sqlite3_bind_text(g1k_af_stmt, 4, rec->d.allele[i], strlen(rec->d.allele[i]), NULL);
+			rc = sqlite3_step(g1k_af_stmt);
+			if (rc == SQLITE_ROW) {
+				const unsigned char * val = sqlite3_column_text(g1k_af_stmt, 0);
+				std::string sval((const char *)(val));
+				AFStr1KG = sval;
+			}
+			
+			sqlite3_bind_int(exac_af_stmt, 1, chrom);
+			sqlite3_bind_int(exac_af_stmt, 2, pos);
+			sqlite3_bind_text(exac_af_stmt, 3, rec->d.allele[0], strlen(rec->d.allele[0]), NULL);
+			sqlite3_bind_text(exac_af_stmt, 4, rec->d.allele[i], strlen(rec->d.allele[i]), NULL);
+			rc = sqlite3_step(exac_af_stmt);
+			if (rc == SQLITE_ROW) {
+				const unsigned char * val = sqlite3_column_text(exac_af_stmt, 0);
+				std::string sval((const char *)(val));
+				AFStrExac = sval;
+			}
 
 			afs_1kg[i-1] = AFStr1KG != "" ? std::stof(AFStr1KG) : 0;
 			afs_exac[i-1] = AFStrExac != "" ? std::stof(AFStrExac) : 0;
+
+			sqlite3_clear_bindings(g1k_af_stmt);
+			sqlite3_clear_bindings(exac_af_stmt);
+			sqlite3_reset(g1k_af_stmt);
+			sqlite3_reset(exac_af_stmt);
 		}
 
 		ret = bcf_update_info_float(out_hdr, rec, "BGAF_1KG", afs_1kg, nafs);
@@ -89,8 +136,13 @@ int main(int argc, char **argv){
 
 	}
 
+	sqlite3_finalize(g1k_af_stmt);
+	sqlite3_finalize(exac_af_stmt);
+
 	bcf_hdr_destroy(out_hdr);
 	bcf_hdr_destroy(hdr);
 	hts_close(in_fp);
 	hts_close(out_fp);
+
+	sqlite3_close(db);
 }
