@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 	const char *errmsg;
 
 	sqlite3_stmt *g1k_af_stmt;
-	std::string g1k_af_sql = "SELECT val FROM g1k WHERE chrom=? AND pos=? AND ref='?' AND alt='?';";
+	std::string g1k_af_sql = "SELECT val FROM g1k WHERE chrom=? AND pos=? AND ref=? AND alt=?;";
 	rc = sqlite3_prepare_v2(db, g1k_af_sql.c_str(), strlen(g1k_af_sql.c_str()), &g1k_af_stmt, &errmsg);
 	if(rc != SQLITE_OK) {
 		std::cerr<<"("<<rc<<") Unable to compile select for g1k statement: "<<errmsg<<std::endl;
