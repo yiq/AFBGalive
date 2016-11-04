@@ -76,15 +76,19 @@ int main(int argc, const char *argv[]) {
 		float *afs = new float[rec->n_allele-1];
 		int nafs = rec->n_allele-1;
 
-		int ret = bcf_get_info_float(hdr, rec, "AF", &afs, &nafs);
+		int ret = bcf_get_info_float(hdr, rec, "AF", &afs, &nafs);		
 
 		for(size_t i=1; i<rec->n_allele; i++) {
+
 			std::string key = std::to_string(chrom) + ":" + \
 							  std::to_string(pos) + ":" + \
 							  rec->d.allele[0] + ":" + \
 							  rec->d.allele[i];
 
 			std::string val = std::to_string(afs[i-1]);
+
+			//std::cout << "val=" << val.c_str() << std::endl;
+
 			sqlite3_bind_int(insertStmt, 1, chrom);
 			sqlite3_bind_int(insertStmt, 2, pos);
 			sqlite3_bind_text(insertStmt, 3, rec->d.allele[0], strlen(rec->d.allele[0]), 0);

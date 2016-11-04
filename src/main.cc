@@ -13,16 +13,30 @@ int compress_output = 0;
 
 
 int main(int argc, char **argv){
+	std::string g1kTable   = "g1k";
+	std::string exacTable  = "exac";
+
 	int c;
+	// If the -b argument not provided, assume build GRCh37
+	std::string build      = "GRCh37";
+
 	while((c = getopt(argc, argv, "z")) != -1) {
 		switch (c) {
 			case 'z':
 				compress_output = 1;
 				break;
+			case 'b':
+				// If the build argument was provided, append it to the exac and 1kg table names
+        		build = optarg;
+       			break;
 			default:
 				break;
 		}
 	}
+
+	// Append the build onto the base table names for g1k and exac
+	g1kTable  = g1kTable  + "_" + build;
+	exacTable = exacTable + "_" + build;
 
 	sqlite3 *db;
 	int rc = sqlite3_open("afdata/af.db", &db);
@@ -35,7 +49,7 @@ int main(int argc, char **argv){
 	const char *errmsg;
 
 	sqlite3_stmt *g1k_af_stmt;
-	std::string g1k_af_sql = "SELECT val FROM g1k WHERE chrom=? AND pos=? AND ref=? AND alt=?;";
+	std::string g1k_af_sql = "SELECT val FROM " + g1kTable + " WHERE chrom=? AND pos=? AND ref=? AND alt=?;";
 	rc = sqlite3_prepare_v2(db, g1k_af_sql.c_str(), strlen(g1k_af_sql.c_str()), &g1k_af_stmt, &errmsg);
 	if(rc != SQLITE_OK) {
 		std::cerr<<"("<<rc<<") Unable to compile select for g1k statement: "<<errmsg<<std::endl;
@@ -43,7 +57,7 @@ int main(int argc, char **argv){
 	}
 
 	sqlite3_stmt *exac_af_stmt;
-	std::string exac_af_sql = "SELECT val FROM exac WHERE chrom=? AND pos=? AND ref=? AND alt=?;";
+	std::string exac_af_sql = "SELECT val FROM " + exacTable + " WHERE chrom=? AND pos=? AND ref=? AND alt=?;";
 	rc = sqlite3_prepare_v2(db, exac_af_sql.c_str(), strlen(exac_af_sql.c_str()), &exac_af_stmt, &errmsg);
 	if(rc != SQLITE_OK) {
 		std::cerr<<"("<<rc<<") Unable to compile select for exac statement: "<<errmsg<<std::endl;
