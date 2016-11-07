@@ -20,7 +20,7 @@ int main(int argc, char **argv){
 	// If the -b argument not provided, assume build GRCh37
 	std::string build      = "GRCh37";
 
-	while((c = getopt(argc, argv, "z")) != -1) {
+	while((c = getopt(argc, argv, ":zb:")) != -1) {
 		switch (c) {
 			case 'z':
 				compress_output = 1;
@@ -29,6 +29,10 @@ int main(int argc, char **argv){
 				// If the build argument was provided, append it to the exac and 1kg table names
         		build = optarg;
        			break;
+			case ':':
+				break;
+			case '?':
+				break;
 			default:
 				break;
 		}
